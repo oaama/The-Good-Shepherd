@@ -1,21 +1,39 @@
+import 'package:dio/dio.dart';
 import '../models/user.dart';
+import 'api_client.dart';
 
 class AuthService {
-  Future<User> login(String email, String password) async {
-    // TODO: Implement real API call
-    await Future.delayed(const Duration(seconds: 1));
-    return User(
-      fullName: "John Doe",
-      age: 20,
-      gender: "Male",
-      phone: "1234567890",
-      email: email,
-    );
+  final ApiClient _apiClient = ApiClient();
+
+  Future<User> login(String phone, String password) async {
+    final response = await _apiClient.post('/auth/login', {
+      'phone': phone,
+      'password': password,
+    });
+    return User.fromJson(response.data['user']);
   }
 
-  Future<User> register(User user, String password) async {
-    // TODO: Implement real API call
-    await Future.delayed(const Duration(seconds: 1));
-    return user;
+  Future<User> register({
+    required String fullName,
+    required String churchName,
+    required String phoneNumber,
+    required String area,
+    required String address,
+    required String password,
+  }) async {
+    final response = await _apiClient.post('/auth/register', {
+      'fullName': fullName,
+      'churchName': churchName,
+      'phoneNumber': phoneNumber,
+      'area': area,
+      'address': address,
+      'password': password,
+    });
+    return User.fromJson(response.data['user']);
+  }
+
+  Future<void> logout() async {
+    // If you have a logout endpoint, call it here
+    // await _apiClient.post('/auth/logout', {});
   }
 }

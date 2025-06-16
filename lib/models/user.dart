@@ -1,40 +1,40 @@
-// package:the_good_shepherd/models/user.dart
+import 'package:json_annotation/json_annotation.dart';
+
+part 'user.g.dart';
+
+@JsonSerializable()
 class User {
   final String id;
   final String fullName;
   final String email;
-  final String phone;
-  final int age;
-  final String gender;
-  final String? imageUrl;
+  final String phoneNumber;
+  final String churchName;
+  final String area;
+  final String? profilePicture;
+  final DateTime createdAt;
 
   User({
     required this.id,
     required this.fullName,
     required this.email,
-    required this.phone,
-    required this.age,
-    required this.gender,
-    this.imageUrl,
+    required this.phoneNumber,
+    required this.churchName,
+    required this.area,
+    this.profilePicture,
+    required this.createdAt,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
-    id: json['id'] ?? '',
-    fullName: json['fullName'] ?? '',
-    email: json['email'] ?? '',
-    phone: json['phone'] ?? '',
-    age: json['age'] ?? 0,
-    gender: json['gender'] ?? '',
-    imageUrl: json['imageUrl'],
-  );
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  Map<String, dynamic> toJson() => _$UserToJson(this);
 
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'fullName': fullName,
-    'email': email,
-    'phone': phone,
-    'age': age,
-    'gender': gender,
-    'imageUrl': imageUrl,
-  };
+  // Dummy user data
+  static User dummy() => User(
+    id: '1',
+    fullName: 'Angelo Rezq',
+    email: 'angelo.rezq@example.com',
+    phoneNumber: '01012345678',
+    churchName: 'St. Mary Church',
+    area: 'Minya',
+    createdAt: DateTime.now(),
+  );
 }

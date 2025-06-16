@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:the_good_shepherd/providers/auth_provider.dart';
-import 'package:the_good_shepherd/providers/user_provider.dart';
-import 'package:the_good_shepherd/providers/panic_provider.dart';
-import 'package:the_good_shepherd/providers/parent_provider.dart';
-import 'package:the_good_shepherd/router/app_router.dart';
-import 'package:the_good_shepherd/theme/app_theme.dart';
+import 'theme/app_theme.dart';
+import 'router/app_router.dart';
+import 'services/api_service.dart';
+import 'providers/sermon_provider.dart';
+import 'providers/daily_verse_provider.dart';
+import 'providers/daily_advice_provider.dart';
 
-void main() {
+void main() async {
+  // Ensure Flutter is initialized
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Set preferred orientations
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+  
   runApp(const TheGoodShepherdApp());
 }
 
@@ -16,12 +26,19 @@ class TheGoodShepherdApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final apiService = ApiService();
+
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => PanicProvider()),
-        ChangeNotifierProvider(create: (_) => ParentProvider()),
+        ChangeNotifierProvider(
+          create: (_) => SermonProvider(apiService: apiService),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => DailyVerseProvider(apiService: apiService),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => DailyAdviceProvider(apiService: apiService),
+        ),
       ],
       child: MaterialApp.router(
         title: 'The Good Shepherd',

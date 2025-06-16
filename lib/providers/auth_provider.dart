@@ -1,75 +1,79 @@
 import 'package:flutter/material.dart';
-import 'package:the_good_shepherd/services/api_service.dart';
-import 'package:the_good_shepherd/services/shared_prefs_service.dart';
-import 'package:the_good_shepherd/services/error_handler.dart';
-import 'package:the_good_shepherd/models/user.dart';
+import '../models/user.dart';
+import '../services/auth_service.dart';
 
-/// AuthProvider manages authentication state and logic.
 class AuthProvider extends ChangeNotifier {
-  User? _user;
-  bool _isLoading = false;
+  final AuthService _authService = AuthService();
+
+  User? currentUser;
+  bool _isLoggedIn = false;
   String? _error;
-  String? _token;
+  bool _isLoading = false;
 
-  User? get user => _user;
-  bool get isLoading => _isLoading;
+  bool get isLoggedIn => _isLoggedIn;
   String? get error => _error;
-  String? get token => _token;
-  bool get isLoggedIn => _token != null && _token!.isNotEmpty;
+  bool get isLoading => _isLoading;
 
-  /// Login user with email and password
-  Future<void> login(String email, String password) async {
+  Future<void> login(String phone, String password) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
-    await Future.delayed(const Duration(milliseconds: 500));
-    // MOCK DATA INJECTION
-    _token = 'mock_token_123';
-    await SharedPrefsService.saveToken(_token!);
-    _user = User(
-      id: '1',
-      fullName: 'Mina Youssef',
-      email: email,
-      phone: '+20123456789',
-      age: 22,
-      gender: 'Male',
-    );
-    _error = null;
+    try {
+      final user = await _authService.login(phone, password);
+      currentUser = user;
+      _isLoggedIn = true;
+      _error = null;
+    } catch (e) {
+      _isLoggedIn = false;
+      _error = 'Login failed: ${e.toString()}';
+      currentUser = null;
+    }
     _isLoading = false;
     notifyListeners();
-    // TODO: Replace with real backend endpoint
   }
 
-  /// Register a new user
   Future<void> register({
     required String fullName,
-    required int age,
-    required String gender,
-    required String phone,
-    required String email,
+    required String churchName,
+    required String phoneNumber,
+    required String area,
+    required String address,
     required String password,
   }) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
-    await Future.delayed(const Duration(milliseconds: 500));
-    // MOCK DATA INJECTION
+    try {
+      final user = await _authService.register(
+        fullName: fullName,
+        churchName: churchName,
+        phoneNumber: phoneNumber,
+        area: area,
+        address: address,
+        password: password,
+      );
+      currentUser = user;
+      _isLoggedIn = true;
+      _error = null;
+    } catch (e) {
+      _isLoggedIn = false;
+      _error = 'Registration failed: ${e.toString()}';
+      currentUser = null;
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> logout() async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      await _authService.logout();
+    } catch (_) {}
+    currentUser = null;
+    _isLoggedIn = false;
     _error = null;
     _isLoading = false;
     notifyListeners();
-    // TODO: Replace with real backend endpoint
-  }
-
-  /// Logout user and clear token
-  Future<void> logout() async {
-    _user = null;
-    _token = null;
-    await SharedPrefsService.clearToken();
-    notifyListeners();
-  }
-
-  /// Placeholder for token refresh logic
-  Future<void> refreshToken() async {
-    // TODO: Implement token refresh logic
   }
 }
