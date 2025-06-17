@@ -140,7 +140,9 @@ class _DailyAdviceScreenState extends State<DailyAdviceScreen> {
                           const SizedBox(height: 24),
                           ElevatedButton.icon(
                             onPressed: () {
-                              // Save or share functionality would go here
+                              final adviceText = Provider.of<DailyAdviceProvider>(context, listen: false).dailyAdvice?.advice ?? "No advice";
+                              print('Saving advice: $adviceText');
+                              Fluttertoast.showToast(msg: "Save for later action triggered for advice");
                             },
                             icon: const Icon(Icons.bookmark),
                             label: const Text('Save for Later'),
@@ -154,34 +156,10 @@ class _DailyAdviceScreenState extends State<DailyAdviceScreen> {
                             ),
                           ),
                         ],
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: () {
-                // Save or share functionality would go here
-              },
-              icon: const Icon(Icons.bookmark),
-              label: const Text('Save for Later'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.primaryColor,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

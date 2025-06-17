@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:the_good_shepherd/theme/app_theme.dart'; // Added import
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -33,14 +34,14 @@ class CustomTextField extends StatelessWidget {
         labelText: label,
         labelStyle: GoogleFonts.openSans(
           fontWeight: FontWeight.w600,
-          color: Colors.black87,
+          color: AppTheme.primaryTextColor, // Use AppTheme
         ),
         prefixIcon: prefixIcon != null
-            ? Icon(prefixIcon, color: Color(0xFF002366))
+            ? Icon(prefixIcon, color: AppTheme.customIconBlue) // Use AppTheme
             : null,
         suffixIcon: suffixIcon,
         filled: true,
-        fillColor: const Color(0xFFF6F6F6),
+        fillColor: AppTheme.customTextFieldFill, // Use AppTheme
         contentPadding: const EdgeInsets.symmetric(
           vertical: 18,
           horizontal: 20,
@@ -55,7 +56,7 @@ class CustomTextField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: Color(0xFFBFA14A), width: 2),
+          borderSide: const BorderSide(color: AppTheme.customButtonGold, width: 2), // Use AppTheme
         ),
       ),
     );

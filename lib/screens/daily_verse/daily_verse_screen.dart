@@ -159,7 +159,10 @@ class _DailyVerseScreenState extends State<DailyVerseScreen> {
                           const SizedBox(height: 24),
                           ElevatedButton.icon(
                             onPressed: () {
-                              // Share functionality would go here
+                              final verseText = Provider.of<DailyVerseProvider>(context, listen: false).dailyVerse?.text ?? "No verse";
+                              final verseReference = Provider.of<DailyVerseProvider>(context, listen: false).dailyVerse?.reference ?? "";
+                              print('Sharing verse: $verseText ($verseReference)');
+                              Fluttertoast.showToast(msg: "Share action triggered for verse");
                             },
                             icon: const Icon(Icons.share),
                             label: const Text('Share Verse'),
@@ -173,38 +176,10 @@ class _DailyVerseScreenState extends State<DailyVerseScreen> {
                             ),
                           ),
                         ],
-                    Text(
-                      '${(verse['date'] as DateTime).toLocal().toString().split(' ')[0]}',
-                      style: TextStyle(
-                        color: AppTheme.secondaryColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
                       ),
-                      textAlign: TextAlign.right,
-                    ),
-                  ],
+                    );
+                  },
                 ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: () {
-                // Share functionality would go here
-              },
-              icon: const Icon(Icons.share),
-              label: const Text('Share Verse'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.primaryColor,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

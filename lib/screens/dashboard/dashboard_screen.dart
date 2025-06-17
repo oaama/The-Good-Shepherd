@@ -67,7 +67,7 @@ class DashboardScreen extends StatelessWidget {
                 _DashboardButton(
                   icon: Icons.family_restroom,
                   label: 'Parents',
-                  onTap: () => context.go('/parents'),
+                  onTap: () => context.go('/spiritual-fathers'),
                 ),
                 _DashboardButton(
                   icon: Icons.menu_book,

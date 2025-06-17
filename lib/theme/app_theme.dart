@@ -9,6 +9,11 @@ class AppTheme {
   static const Color backgroundColor = Color(0xFFF5F5F7); // Light Gray
   static const Color surfaceColor = Colors.white;
   static const Color errorColor = Color(0xFFE53935);
+
+  // Custom Widget Specific Colors (NEW)
+  static const Color customButtonGold = Color(0xFFBFA14A);
+  static const Color customIconBlue = Color(0xFF002366);
+  static const Color customTextFieldFill = Color(0xFFF6F6F6);
   
   // Text Colors
   static const Color primaryTextColor = Color(0xFF212121);

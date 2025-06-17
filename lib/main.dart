@@ -44,7 +44,7 @@ class TheGoodShepherdApp extends StatelessWidget {
         title: 'The Good Shepherd',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
-        routerConfig: appRouter,
+        routerConfig: AppRouter.createRouter(),
       ),
     );
   }

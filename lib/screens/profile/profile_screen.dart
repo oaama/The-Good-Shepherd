@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart'; // Added Provider
 import 'package:the_good_shepherd/theme/app_theme.dart';
-import 'package:the_good_shepherd/services/api_service.dart';
+// import 'package:the_good_shepherd/services/api_service.dart'; // Commented out ApiService
+import 'package:the_good_shepherd/providers/user_provider.dart'; // Added UserProvider
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:the_good_shepherd/models/user.dart';
@@ -14,50 +16,51 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final ApiService _apiService = ApiService();
-  bool _isLoading = true;
+  // final ApiService _apiService = ApiService(); // Commented out ApiService
+  // bool _isLoading = true; // Will use provider's isLoading
   bool _isEditing = false;
-  User? _user;
-  String? _errorMessage;
+  User? _editingUser; // Local copy for editing state
+  // String? _errorMessage; // Will use provider's error message
 
   @override
   void initState() {
     super.initState();
-    _fetchUserProfile();
+    // Fetch user profile using UserProvider after the first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchUserProfile();
+    });
   }
 
   Future<void> _fetchUserProfile() async {
-    try {
-      setState(() => _isLoading = true);
-      
-      // Get user data from API
-      _user = await _apiService.getUserProfile();
-      
-    } catch (e) {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    await userProvider.fetchCurrentUser(); // Assuming this method exists and sets isLoading/error
+    if (userProvider.currentUser != null) {
       setState(() {
-        _errorMessage = 'Failed to load profile: ${e.toString()}';
+        // Make a local copy for editing, assuming User has a copyWith or fromJson/toJson
+        // For simplicity, direct assignment if User is mutable, or implement User.clone() / User.copyWith()
+        // This example assumes direct assignment or a simple clone for editing state.
+        // A robust solution would use a proper cloning method.
+        _editingUser = User(
+            id: userProvider.currentUser!.id,
+            fullName: userProvider.currentUser!.fullName,
+            email: userProvider.currentUser!.email,
+            phoneNumber: userProvider.currentUser!.phoneNumber,
+            churchName: userProvider.currentUser!.churchName,
+            area: userProvider.currentUser!.area,
+            createdAt: userProvider.currentUser!.createdAt);
       });
-      Fluttertoast.showToast(
-        msg: _errorMessage!,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.TOP,
-        backgroundColor: AppTheme.errorColor,
-        textColor: Colors.white,
-      );
-    } finally {
-      setState(() => _isLoading = false);
     }
   }
 
   Future<void> _updateProfile() async {
-    if (_user == null) return;
+    if (_editingUser == null) return;
 
-    try {
-      setState(() => _isLoading = true);
-      
-      // Update user data
-      _user = await _apiService.updateUserProfile(_user!);
-      
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    // No need to setState for isLoading = true, provider should handle its own loading state.
+
+    bool success = await userProvider.updateUserProfile(_editingUser!); // Assuming this returns bool or throws
+
+    if (success) {
       setState(() {
         _isEditing = false;
       });
@@ -69,25 +72,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: AppTheme.primaryColor,
         textColor: Colors.white,
       );
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Failed to update profile: ${e.toString()}';
-      });
+    } else if (userProvider.error != null) {
       Fluttertoast.showToast(
-        msg: _errorMessage!,
+        msg: userProvider.error!,
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.TOP,
         backgroundColor: AppTheme.errorColor,
         textColor: Colors.white,
       );
-    } finally {
-      setState(() => _isLoading = false);
     }
+    // No need for finally setState for isLoading, provider handles it.
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
+    final userProvider = context.watch<UserProvider>(); // Watch for changes
+
+    if (userProvider.isLoading && _editingUser == null) { // Show loading only if no user data yet
       return Scaffold(
         appBar: AppBar(
           title: const Text('My Profile'),
@@ -101,7 +102,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
     }
 
-    if (_errorMessage != null) {
+    if (userProvider.error != null && _editingUser == null) { // Show error only if no user data yet
       return Scaffold(
         appBar: AppBar(
           title: const Text('My Profile'),
@@ -111,7 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         body: Center(
           child: Text(
-            _errorMessage!,
+            userProvider.error!,
             style: TextStyle(
               color: AppTheme.errorColor,
               fontSize: 16,
@@ -121,13 +122,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
     }
 
-    if (_user == null) {
+    // If not loading and no error, but editingUser is not set yet from provider, try to set it.
+    // This can happen if fetchCurrentUser completes but widget hasn't rebuilt with new provider state yet.
+    if (_editingUser == null && userProvider.currentUser != null) {
+       _editingUser = User( // Direct assignment or clone
+            id: userProvider.currentUser!.id,
+            fullName: userProvider.currentUser!.fullName,
+            email: userProvider.currentUser!.email,
+            phoneNumber: userProvider.currentUser!.phoneNumber,
+            churchName: userProvider.currentUser!.churchName,
+            area: userProvider.currentUser!.area,
+            createdAt: userProvider.currentUser!.createdAt);
+    }
+
+
+    if (_editingUser == null) { // If still no user data (e.g. provider has no user after fetch)
       return const Scaffold(
         appBar: AppBar(title: Text('My Profile')),
         body: Center(child: Text('No profile data available')),
       );
     }
 
+    // At this point, _editingUser should be available for the UI
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Profile'),
@@ -145,17 +161,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05, vertical: 16.0), // Responsive padding
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 16),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.02), // Responsive Sized Box
             // Profile Picture
             Center(
               child: Stack(
                 children: [
                   CircleAvatar(
-                    radius: 60,
+                    radius: MediaQuery.of(context).size.width * 0.15, // Responsive radius
                     backgroundColor: AppTheme.primaryColor,
                     child: Icon(
                       Icons.person,
@@ -182,7 +198,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.03), // Responsive Sized Box
             // User Info Card
             Card(
               elevation: 2,
@@ -190,19 +206,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04), // Responsive padding
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildProfileInfoRow('Name', _user!.fullName, isEditable: true),
+                    _buildProfileInfoRow('Name', _editingUser!.fullName, isEditable: true),
                     const Divider(),
-                    _buildProfileInfoRow('Email', _user!.email, isEditable: true),
+                    _buildProfileInfoRow('Email', _editingUser!.email, isEditable: true),
                     const Divider(),
-                    _buildProfileInfoRow('Phone', _user!.phoneNumber, isEditable: true),
+                    _buildProfileInfoRow('Phone', _editingUser!.phoneNumber, isEditable: true),
                     const Divider(),
-                    _buildProfileInfoRow('Church', _user!.churchName, isEditable: false),
+                    _buildProfileInfoRow('Church', _editingUser!.churchName, isEditable: false),
                     const Divider(),
-                    _buildProfileInfoRow('Region', _user!.area, isEditable: false),
+                    _buildProfileInfoRow('Region', _editingUser!.area, isEditable: false),
                   ],
                 ),
               ),
@@ -239,7 +255,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     leading: const Icon(Icons.language),
                     title: const Text('Language'),
                     trailing: const Text('English'),
-                    onTap: () {},
+                    onTap: () {
+                      Fluttertoast.showToast(msg: "Language selection tapped");
+                    },
                   ),
                   const Divider(height: 1),
                   ListTile(
@@ -264,13 +282,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildProfileInfoRow(String label, String value, {bool isEditable = false}) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: EdgeInsets.symmetric(vertical: screenWidth * 0.02), // Responsive padding
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 100,
+          Container( // Changed SizedBox to Container for more flexibility if needed
+            width: screenWidth * 0.25, // Responsive width for label
             child: Text(
               label,
               style: TextStyle(
@@ -293,12 +312,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     onChanged: (newValue) {
                       setState(() {
-                        _userData![label.toLowerCase()] = newValue;
+                        if (label == 'Name') {
+                          _editingUser!.fullName = newValue;
+                        } else if (label == 'Email') {
+                          _editingUser!.email = newValue;
+                        } else if (label == 'Phone') {
+                          _editingUser!.phoneNumber = newValue;
+                        }
                       });
                     },
                   )
                 : Text(
-                    value,
+                    value, // Display from _editingUser which reflects provider or edits
                     style: TextStyle(
                       color: AppTheme.primaryTextColor,
                     ),

@@ -24,7 +24,7 @@ class RoundedButton extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         elevation: 4,
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
-        textStyle: Theme.of(context).textTheme.titleLarge,
+        textStyle: Theme.of(context).textTheme.labelLarge, // Changed to labelLarge
       ),
       onPressed: onPressed,
     );
