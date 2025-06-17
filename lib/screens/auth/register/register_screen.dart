@@ -53,10 +53,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(
+                    Icon( // Updated
                       Icons.person_add,
                       size: 48,
-                      color: AppTheme.secondaryColor,
+                      color: AppTheme.churchGold, // Updated to new theme color
                     ),
                     const SizedBox(height: 16),
                     TextFormField(

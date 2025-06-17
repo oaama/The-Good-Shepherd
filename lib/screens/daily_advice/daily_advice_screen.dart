@@ -43,8 +43,8 @@ class _DailyAdviceScreenState extends State<DailyAdviceScreen> {
         msg: _errorText!,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
+        backgroundColor: AppTheme.churchRed, // Updated
+        textColor: AppTheme.churchLightText, // Updated
       );
     } finally {
       setState(() {
@@ -107,7 +107,7 @@ class _DailyAdviceScreenState extends State<DailyAdviceScreen> {
                                   Text(
                                     advice.advice,
                                     style: TextStyle(
-                                      color: AppTheme.primaryColor,
+                                      color: AppTheme.churchBlue, // Updated
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -116,7 +116,7 @@ class _DailyAdviceScreenState extends State<DailyAdviceScreen> {
                                   Text(
                                     advice.content,
                                     style: TextStyle(
-                                      color: AppTheme.primaryTextColor,
+                                      color: AppTheme.churchDarkText, // Updated
                                       fontSize: 16,
                                       height: 1.6,
                                     ),
@@ -127,7 +127,7 @@ class _DailyAdviceScreenState extends State<DailyAdviceScreen> {
                                     child: Text(
                                       '${advice.date.toLocal().toString().split(' ')[0]}',
                                       style: TextStyle(
-                                        color: AppTheme.secondaryColor,
+                                        color: AppTheme.churchGold, // Updated
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -146,14 +146,7 @@ class _DailyAdviceScreenState extends State<DailyAdviceScreen> {
                             },
                             icon: const Icon(Icons.bookmark),
                             label: const Text('Save for Later'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppTheme.primaryColor,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
+                            // Style will be inherited from ElevatedButtonTheme
                           ),
                         ],
                       ),

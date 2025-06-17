@@ -29,19 +29,19 @@ class CustomTextField extends StatelessWidget {
       obscureText: obscureText,
       validator: validator,
       keyboardType: keyboardType,
-      style: GoogleFonts.openSans(fontSize: 16),
+      style: GoogleFonts.lato(fontSize: 16), // Updated font
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: GoogleFonts.openSans(
+        labelStyle: GoogleFonts.lato( // Updated font
           fontWeight: FontWeight.w600,
-          color: AppTheme.primaryTextColor, // Use AppTheme
+          color: AppTheme.churchDarkText, // Use AppTheme.churchDarkText
         ),
         prefixIcon: prefixIcon != null
-            ? Icon(prefixIcon, color: AppTheme.customIconBlue) // Use AppTheme
+            ? Icon(prefixIcon, color: AppTheme.churchBlue) // Use AppTheme.churchBlue
             : null,
         suffixIcon: suffixIcon,
         filled: true,
-        fillColor: AppTheme.customTextFieldFill, // Use AppTheme
+        fillColor: Colors.white, // Match main theme's inputDecorationTheme.fillColor
         contentPadding: const EdgeInsets.symmetric(
           vertical: 18,
           horizontal: 20,
@@ -52,11 +52,12 @@ class CustomTextField extends StatelessWidget {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: BorderSide.none,
+          // Consistent with main theme's enabledBorder or make it BorderSide.none if preferred
+          borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: AppTheme.customButtonGold, width: 2), // Use AppTheme
+          borderSide: const BorderSide(color: AppTheme.churchGold, width: 2), // Use AppTheme.churchGold
         ),
       ),
     );

@@ -2,24 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // Primary Colors
-  static const Color primaryColor = Color(0xFF1A237E); // Dark Blue
-  static const Color secondaryColor = Color(0xFFFFC107); // Amber
-  static const Color accentColor = Color(0xFF536DFE); // Light Blue
-  static const Color backgroundColor = Color(0xFFF5F5F7); // Light Gray
-  static const Color surfaceColor = Colors.white;
-  static const Color errorColor = Color(0xFFE53935);
+  // New Church Theme Colors
+  static const Color churchBlue = Color(0xFF003366);
+  static const Color churchGold = Color(0xFFD4AF37);
+  static const Color churchCream = Color(0xFFFFF8DC);
+  static const Color churchRed = Color(0xFF8B0000); // For errors or destructive actions
+  static const Color churchDarkText = Color(0xFF333333);
+  static const Color churchLightText = Color(0xFFFFF8DC); // Same as churchCream
 
-  // Custom Widget Specific Colors (NEW)
-  static const Color customButtonGold = Color(0xFFBFA14A);
-  static const Color customIconBlue = Color(0xFF002366);
-  static const Color customTextFieldFill = Color(0xFFF6F6F6);
+  // Old Colors (can be kept for specific widgets or gradually phased out)
+  // For this refactor, we are primarily focusing on the new church theme for core elements.
+  // static const Color primaryColorOld = Color(0xFF1A237E); // Dark Blue
+  // static const Color secondaryColorOld = Color(0xFFFFC107); // Amber
+  static const Color accentColor = Color(0xFF536DFE); // Kept if still needed, or could be churchGold
+  // static const Color backgroundColorOld = Color(0xFFF5F5F7); // Light Gray
+  static const Color surfaceColor = Colors.white; // Standard white for surfaces like cards
+  // static const Color errorColorOld = Color(0xFFE53935);
+
+  // Custom Widget Specific Colors from previous theme (to be replaced by new theme colors)
+  // static const Color customButtonGold = Color(0xFFBFA14A); // Will become churchGold or similar
+  // static const Color customIconBlue = Color(0xFF002366); // Will become churchBlue
+  // static const Color customTextFieldFill = Color(0xFFF6F6F6); // Will become churchCream or light variant
+
+  // Old Text Colors (to be replaced by new theme text colors)
+  // static const Color primaryTextColorOld = Color(0xFF212121);
+  // static const Color secondaryTextColorOld = Color(0xFF757575);
   
-  // Text Colors
-  static const Color primaryTextColor = Color(0xFF212121);
-  static const Color secondaryTextColor = Color(0xFF757575);
-  
-  // Custom Shadows
+  // Custom Shadows (can be kept as is)
   static final List<BoxShadow> cardShadow = [
     BoxShadow(
       color: Colors.black.withOpacity(0.1),
@@ -31,110 +40,103 @@ class AppTheme {
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
-    primaryColor: primaryColor,
+    primaryColor: churchBlue, // Updated
+    scaffoldBackgroundColor: churchCream, // Updated
+
     colorScheme: const ColorScheme.light(
-      primary: primaryColor,
-      secondary: secondaryColor,
-      surface: surfaceColor,
-      background: backgroundColor,
-      error: errorColor,
-      onPrimary: Colors.white,
-      onSecondary: Colors.black,
-      onSurface: primaryTextColor,
-      onBackground: primaryTextColor,
-      onError: Colors.white,
+      primary: churchBlue,       // Updated
+      secondary: churchGold,     // Updated
+      surface: surfaceColor,     // Keep as white for cards etc.
+      background: churchCream,   // Updated
+      error: churchRed,          // Updated
+      onPrimary: churchLightText,  // Text on churchBlue
+      onSecondary: churchDarkText, // Text on churchGold
+      onSurface: churchDarkText,   // Text on white surfaces
+      onBackground: churchDarkText,// Text on churchCream background
+      onError: churchLightText,    // Text on churchRed
       brightness: Brightness.light,
     ),
     
-    // Scaffold Theme
-    scaffoldBackgroundColor: backgroundColor,
-    
     // App Bar Theme
     appBarTheme: AppBarTheme(
-      backgroundColor: primaryColor,
+      backgroundColor: churchBlue, // Updated
       elevation: 0,
       centerTitle: true,
-      titleTextStyle: GoogleFonts.cairo(
-        color: Colors.white,
+      titleTextStyle: GoogleFonts.lato( // Updated font
+        color: churchLightText,      // Updated
         fontSize: 22,
         fontWeight: FontWeight.bold,
       ),
-      iconTheme: const IconThemeData(color: Colors.white, size: 28),
+      iconTheme: const IconThemeData(color: churchLightText, size: 28), // Updated
     ),
     
     // Button Theme
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: primaryColor,
-        foregroundColor: Colors.white,
+        backgroundColor: churchGold,    // Updated
+        foregroundColor: churchDarkText, // Updated (for contrast on gold)
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
         elevation: 3,
-        textStyle: GoogleFonts.cairo(
+        textStyle: GoogleFonts.lato(   // Updated font
           fontSize: 16,
           fontWeight: FontWeight.w600,
         ),
       ),
     ),
     
-    // Text Theme
-    textTheme: GoogleFonts.cairoTextTheme().copyWith(
-      displayLarge: GoogleFonts.cairo(
-        fontSize: 28,
-        fontWeight: FontWeight.bold,
-        color: primaryTextColor,
-      ),
-      displayMedium: GoogleFonts.cairo(
-        fontSize: 24,
-        fontWeight: FontWeight.bold,
-        color: primaryTextColor,
-      ),
-      bodyLarge: GoogleFonts.cairo(
-        fontSize: 16,
-        color: secondaryTextColor,
-      ),
-      bodyMedium: GoogleFonts.cairo(
-        fontSize: 14,
-        color: secondaryTextColor,
-      ),
+    // Text Theme using Lato
+    textTheme: GoogleFonts.latoTextTheme().copyWith(
+      displayLarge: GoogleFonts.lato(fontSize: 32, fontWeight: FontWeight.bold, color: churchBlue), // Example
+      displayMedium: GoogleFonts.lato(fontSize: 28, fontWeight: FontWeight.bold, color: churchBlue),// Example
+      headlineSmall: GoogleFonts.lato(fontSize: 24, fontWeight: FontWeight.bold, color: churchBlue),// Example
+      titleLarge: GoogleFonts.lato(fontSize: 20, fontWeight: FontWeight.w600, color: churchDarkText),
+      titleMedium: GoogleFonts.lato(fontSize: 16, fontWeight: FontWeight.w600, color: churchDarkText),
+      titleSmall: GoogleFonts.lato(fontSize: 14, fontWeight: FontWeight.w600, color: churchDarkText),
+      bodyLarge: GoogleFonts.lato(fontSize: 16, color: churchDarkText), // Updated
+      bodyMedium: GoogleFonts.lato(fontSize: 14, color: churchDarkText), // Updated
+      labelLarge: GoogleFonts.lato(fontSize: 16, fontWeight: FontWeight.w600, color: churchDarkText), // For buttons if needed
     ),
     
+    // Icon Theme (Global fallback)
+    iconTheme: const IconThemeData(color: churchGold), // Updated
+
     // Input Decoration Theme
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: Colors.white,
+      fillColor: Colors.white, // Or a very light cream like churchCream.withOpacity(0.5)
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide.none,
+        borderSide: BorderSide.none, // Keep clean look
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
+        borderSide: BorderSide(color: Colors.grey.shade300, width: 1), // Subtle border
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: accentColor, width: 2),
+        borderSide: const BorderSide(color: churchGold, width: 2), // Updated
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: errorColor, width: 1.5),
+        borderSide: const BorderSide(color: churchRed, width: 1.5), // Updated
       ),
-      labelStyle: GoogleFonts.cairo(
-        color: secondaryTextColor,
+      labelStyle: GoogleFonts.lato( // Updated font
+        color: churchDarkText.withOpacity(0.8),
         fontSize: 14,
       ),
-      hintStyle: GoogleFonts.cairo(
-        color: Colors.grey.shade400,
+      hintStyle: GoogleFonts.lato( // Updated font
+        color: Colors.grey.shade500,
         fontSize: 14,
       ),
     ),
     
     // Card Theme
     cardTheme: CardThemeData(
-      color: surfaceColor,
+      color: surfaceColor, // Keep cards white to stand out on churchCream bg
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -149,13 +151,13 @@ class AppTheme {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
-      titleTextStyle: TextStyle(
-        color: primaryTextColor,
+      titleTextStyle: GoogleFonts.lato( // Updated font
+        color: churchDarkText,
         fontSize: 20,
         fontWeight: FontWeight.bold,
       ),
-      contentTextStyle: TextStyle(
-        color: primaryTextColor,
+      contentTextStyle: GoogleFonts.lato( // Updated font
+        color: churchDarkText,
         fontSize: 16,
       ),
     ),
@@ -166,8 +168,8 @@ class AppTheme {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
-      contentTextStyle: GoogleFonts.cairo(
-        color: Colors.white,
+      contentTextStyle: GoogleFonts.lato( // Updated font
+        color: churchLightText, // Assuming snackbars have dark background by default
         fontSize: 14,
       ),
     ),

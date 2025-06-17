@@ -18,13 +18,14 @@ class RoundedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
       icon: icon != null ? Icon(icon, size: 20) : const SizedBox.shrink(),
-      label: Text(label),
+      label: Text(label), // Text style from labelLarge will provide color
       style: ElevatedButton.styleFrom(
-        backgroundColor: color ?? Theme.of(context).colorScheme.primary,
+        backgroundColor: color ?? AppTheme.churchGold, // Default to AppTheme.churchGold
+        foregroundColor: AppTheme.churchDarkText, // Default foreground for text and icon
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         elevation: 4,
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
-        textStyle: Theme.of(context).textTheme.labelLarge, // Changed to labelLarge
+        textStyle: Theme.of(context).textTheme.labelLarge,
       ),
       onPressed: onPressed,
     );

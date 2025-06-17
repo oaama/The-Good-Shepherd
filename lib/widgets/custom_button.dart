@@ -20,27 +20,28 @@ class CustomButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppTheme.customButtonGold, // Use AppTheme
+          backgroundColor: AppTheme.churchGold, // Use AppTheme.churchGold
+          foregroundColor: AppTheme.churchDarkText, // Use AppTheme.churchDarkText for contrast
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18),
           ),
           padding: const EdgeInsets.symmetric(vertical: 16),
           elevation: 6,
-          textStyle: GoogleFonts.openSans(
-            fontSize: 18,
+          textStyle: GoogleFonts.lato( // Match font with new theme
+            fontSize: 18, // Kept original size for this button, could be themed
             fontWeight: FontWeight.bold,
           ),
         ),
         child: isLoading
-            ? const SizedBox(
+            ? SizedBox(
                 height: 22,
                 width: 22,
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  valueColor: AlwaysStoppedAnimation<Color>(AppTheme.churchDarkText), // Match foreground
                   strokeWidth: 2.5,
                 ),
               )
-            : Text(label, style: const TextStyle(color: Colors.white)),
+            : Text(label), // Text color will be taken from foregroundColor
       ),
     );
   }

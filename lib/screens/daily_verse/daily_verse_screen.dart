@@ -43,8 +43,8 @@ class _DailyVerseScreenState extends State<DailyVerseScreen> {
         msg: _errorText!,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
+        backgroundColor: AppTheme.churchRed, // Updated
+        textColor: AppTheme.churchLightText, // Updated
       );
     } finally {
       setState(() {
@@ -107,7 +107,7 @@ class _DailyVerseScreenState extends State<DailyVerseScreen> {
                                   Text(
                                     verse.text,
                                     style: TextStyle(
-                                      color: AppTheme.primaryColor,
+                                      color: AppTheme.churchBlue, // Updated
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -116,7 +116,7 @@ class _DailyVerseScreenState extends State<DailyVerseScreen> {
                                   Text(
                                     verse.reference,
                                     style: TextStyle(
-                                      color: AppTheme.secondaryColor,
+                                      color: AppTheme.churchGold, // Updated
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -126,27 +126,27 @@ class _DailyVerseScreenState extends State<DailyVerseScreen> {
                                     children: [
                                       Icon(
                                         Icons.favorite,
-                                        color: AppTheme.primaryColor,
+                                        color: AppTheme.churchGold, // Updated
                                       ).animate().fadeIn(delay: 200.ms),
                                       const SizedBox(width: 8),
-                                      Text('${verse.likes}').animate().fadeIn(delay: 200.ms),
+                                      Text('${verse.likes}', style: Theme.of(context).textTheme.bodyMedium).animate().fadeIn(delay: 200.ms), // Use theme text
                                       const SizedBox(width: 16),
                                       Icon(
                                         Icons.share,
-                                        color: AppTheme.primaryColor,
+                                        color: AppTheme.churchGold, // Updated
                                       ).animate().fadeIn(delay: 300.ms),
                                       const SizedBox(width: 8),
-                                      Text('${verse.shares}').animate().fadeIn(delay: 300.ms),
+                                      Text('${verse.shares}', style: Theme.of(context).textTheme.bodyMedium).animate().fadeIn(delay: 300.ms), // Use theme text
                                       const Spacer(),
                                       IconButton(
-                                        icon: const Icon(Icons.bookmark_border),
+                                        icon: Icon(Icons.bookmark_border, color: AppTheme.churchGold), // Updated
                                         onPressed: () {
                                           Fluttertoast.showToast(
                                             msg: 'تم حفظ الآية',
                                             toastLength: Toast.LENGTH_SHORT,
                                             gravity: ToastGravity.BOTTOM,
-                                            backgroundColor: AppTheme.primaryColor,
-                                            textColor: Colors.white,
+                                            backgroundColor: AppTheme.churchBlue, // Updated
+                                            textColor: AppTheme.churchLightText, // Updated
                                           );
                                         },
                                       ).animate().fadeIn(delay: 400.ms),
@@ -166,14 +166,7 @@ class _DailyVerseScreenState extends State<DailyVerseScreen> {
                             },
                             icon: const Icon(Icons.share),
                             label: const Text('Share Verse'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppTheme.primaryColor,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
+                            // Style will be inherited from ElevatedButtonTheme
                           ),
                         ],
                       ),

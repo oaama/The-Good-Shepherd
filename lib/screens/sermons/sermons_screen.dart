@@ -33,11 +33,10 @@ class SermonsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sermons'),
-        backgroundColor: AppTheme.primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 0,
+        // backgroundColor and foregroundColor removed to use theme
+        elevation: 0, // Kept as it was explicitly set
       ),
-      backgroundColor: AppTheme.backgroundColor,
+      // backgroundColor removed to use theme
       body: ListView.builder(
         padding: const EdgeInsets.all(18),
         itemCount: sermons.length,
@@ -53,11 +52,14 @@ class SermonsScreen extends StatelessWidget {
             child: ListTile(
               title: Text(
                 sermon['title'] as String,
-                style: TextStyle(
-                  color: AppTheme.primaryColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: AppTheme.churchBlue, // Or AppTheme.churchDarkText
+                      fontWeight: FontWeight.bold, // Keep existing emphasis
+                    ) ?? TextStyle( // Fallback if titleMedium is null
+                      color: AppTheme.churchBlue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
               ),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,16 +67,18 @@ class SermonsScreen extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     sermon['description'] as String,
-                    style: TextStyle(
-                      color: AppTheme.primaryTextColor.withOpacity(0.85),
-                      fontSize: 15,
-                    ),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: AppTheme.churchDarkText.withOpacity(0.85),
+                        ) ?? TextStyle( // Fallback
+                          color: AppTheme.churchDarkText.withOpacity(0.85),
+                          fontSize: 15,
+                        ),
                   ),
                   const SizedBox(height: 6),
                   Text(
                     'Date: ${(sermon['date'] as DateTime).toLocal().toString().split(' ')[0]}',
                     style: TextStyle(
-                      color: AppTheme.secondaryColor,
+                      color: AppTheme.churchGold, // Updated
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                     ),

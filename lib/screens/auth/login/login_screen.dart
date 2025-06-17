@@ -55,8 +55,8 @@ class _LoginScreenState extends State<LoginScreen> {
           msg: _errorMessage!,
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.TOP,
-          backgroundColor: AppTheme.errorColor,
-          textColor: Colors.white,
+          backgroundColor: AppTheme.churchRed, // Updated
+          textColor: AppTheme.churchLightText, // Updated
         );
       } finally {
         setState(() => _isLoading = false);
@@ -76,16 +76,16 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Icon(
+                Icon( // Updated
                   Icons.church,
                   size: 80,
-                  color: AppTheme.primaryColor,
+                  color: AppTheme.churchGold, // Updated to churchGold for accent
                 ).animate().fadeIn(duration: 500.ms),
                 const SizedBox(height: 24),
                 Text(
                   'Welcome Back',
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        color: AppTheme.primaryColor,
+                        color: AppTheme.churchBlue, // Updated
                         fontWeight: FontWeight.bold,
                       ),
                   textAlign: TextAlign.center,
@@ -93,9 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 8),
                 Text(
                   'Sign in to continue',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: AppTheme.secondaryTextColor,
-                      ),
+                  style: Theme.of(context).textTheme.bodyLarge, // Use theme directly
                   textAlign: TextAlign.center,
                 ).animate().fadeIn(duration: 700.ms),
                 const SizedBox(height: 32),
@@ -154,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text(
                       _errorMessage!,
                       style: TextStyle(
-                        color: AppTheme.errorColor,
+                        color: AppTheme.churchRed, // Updated
                         fontSize: 14,
                       ),
                       textAlign: TextAlign.center,
@@ -170,9 +168,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   child: _isLoading
-                      ? const CircularProgressIndicator()
+                      ? CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(AppTheme.churchDarkText), // Match button text
+                        )
                       : const Text('Sign In'),
-                ).animate().fadeIn(duration: 1100.ms),
+                ).animate()
+                 .fadeIn(duration: 1100.ms) // Keep existing fadeIn
+                 .scaleXY(delay: 300.ms, duration: 500.ms, begin: 0.9, end: 1, curve: Curves.easeOut), // Add scaleXY
                 const SizedBox(height: 16),
                 TextButton(
                   onPressed: () {
